@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/img"
-    tools:context=".FaceDetectionActivity">
+    tools:context=".activity.FaceDetectionActivity">
 
     <!-- Back Button -->
     <ImageButton
@@ -42,17 +42,11 @@
         app:layout_constraintTop_toBottomOf="@id/imageView"
         tools:ignore="ScrollViewCount">
 
-        <TextView
+        <com.example.facedetection.widget.CustomTextView
             android:id="@+id/resultTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="4dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:scrollbars="vertical"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:scrollbars="vertical" />
 
     </androidx.core.widget.NestedScrollView>
 

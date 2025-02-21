@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/img"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
@@ -31,16 +31,10 @@
 
 
 
-        <TextView
+        <com.example.facedetection.widget.CustomTextView
             android:id="@+id/resultTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:padding="10dp"
-            android:elevation="4dp"
-            android:textStyle="bold"
-            android:gravity="center"
             android:scrollbars="vertical" />
 
     </androidx.core.widget.NestedScrollView>

@@ -1,49 +1,17 @@
-package com.example.facedetection
+package com.example.facedetection.helper
 
-import android.net.Uri
-import android.os.Bundle
+
+
+import android.content.Context
 import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.facedetection.databinding.ActivityFaceDetectionBinding
-import com.example.facedetection.databinding.ActivityMainBinding
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import com.google.mlkit.vision.face.FaceLandmark
 
-class FaceDetectionActivity : AppCompatActivity() {
+object FaceDetectionHelper {
 
-
-
-    private lateinit var imageUri: Uri
-    private lateinit var binding: ActivityFaceDetectionBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-
-
-        binding = ActivityFaceDetectionBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val imageUriString = intent.getStringExtra("imageUri")
-        imageUri = Uri.parse(imageUriString)
-
-        binding.imageView.setImageURI(imageUri)
-
-        // Yüz tanıma əməliyyatını aparmaq
-        processImageFromUri(imageUri)
-
-    }
-
-    private fun processImageFromUri(uri: Uri) {
-        val image = InputImage.fromFilePath(this, uri)
-
+    fun detectFaces(context: Context, image: InputImage, onComplete: (String) -> Unit) {
         val options = FaceDetectorOptions.Builder()
             .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
             .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
@@ -54,9 +22,8 @@ class FaceDetectionActivity : AppCompatActivity() {
 
         detector.process(image)
             .addOnSuccessListener { faces ->
+                val facesDetected = StringBuilder()
                 if (faces.isNotEmpty()) {
-                    val facesDetected = StringBuilder("Faces detected!\n\n")
-
                     faces.forEachIndexed { index, face ->
                         val left = face.boundingBox.left
                         val top = face.boundingBox.top
@@ -86,9 +53,8 @@ class FaceDetectionActivity : AppCompatActivity() {
                         }
 
 
-                        facesDetected.append(
-                            """
-                       
+                        facesDetected.append("""
+                             
                         Face #${index + 1}:
                         Coordinates: Left: $left, Top: $top, Right: $right, Bottom: $bottom
                         Width: $width, Height: $height
@@ -106,22 +72,18 @@ class FaceDetectionActivity : AppCompatActivity() {
                         Left Mouth Position: ${leftMouth?.position}
                         Right Mouth Position: ${rightMouth?.position}
                         
-                        
-                        
-                    """.trimIndent()
-                        )
+                       
+                    """.trimIndent())
                     }
-                    runOnUiThread {
-                        binding.resultTextView.text = facesDetected.toString()
-                    }
-
-
+                    onComplete(facesDetected.toString())
                 } else {
-                    binding.resultTextView.text = "No faces detected"
+                    onComplete("No faces detected")
                 }
             }
             .addOnFailureListener { e ->
                 Log.e("FaceDetection", "Error: ${e.localizedMessage}")
+                onComplete("Error in face detection")
             }
     }
 }
+
