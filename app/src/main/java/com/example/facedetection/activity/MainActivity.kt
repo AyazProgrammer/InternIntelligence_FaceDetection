@@ -53,6 +53,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, 1)
         }
+        binding.rotateCameraButton.setOnClickListener {
+            toggleCamera()
+        }
 
         binding.galleryButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
@@ -79,6 +82,19 @@ class MainActivity : AppCompatActivity() {
         return REQUIRED_PERMISSIONS.all {
             ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
         }
+    }
+    private fun toggleCamera() {
+        cameraSelector = if (cameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA) {
+            CameraSelector.DEFAULT_BACK_CAMERA
+        } else {
+            CameraSelector.DEFAULT_FRONT_CAMERA
+        }
+
+
+        CameraHelper.startCamera(
+            this, cameraSelector, binding.previewView, cameraExecutor, imageAnalyzer,
+            onError = { exc -> Log.e("CameraX", "Error restarting camera", exc) }
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
