@@ -11,6 +11,9 @@ import com.google.mlkit.vision.face.FaceLandmark
 
 object FaceDetectionHelper {
 
+
+
+
     fun detectFaces(context: Context, image: InputImage, onComplete: (String) -> Unit) {
         val options = FaceDetectorOptions.Builder()
             .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
